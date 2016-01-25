@@ -7,10 +7,9 @@
 //
 
 #import "HomeViewController.h"
-#define WIDTH self.view.frame.size.width
-#define HEIGHT self.view.frame.size.height
 
-@interface HomeViewController ()<UITableViewDataSource,UITableViewDelegate,UIScrollViewDelegate>
+
+@interface HomeViewController ()<UITableViewDataSource,UITableViewDelegate,UIScrollViewDelegate,HomeTableViewCellDelegate>
 {
     NSInteger imageCount;
     NSTimer *_timer;
@@ -18,13 +17,15 @@
     UIImageView *_imageView;
     UIView *view;
     UIButton *button;
-   UITableView *tableViewSort;
     NSArray *sortArray;
     NSArray *headerTitle;
-    //UIView *view1;
+    //    CGFloat cellHeight;
+    HomeTableViewCell *_homeCell;
+    
+    NSMutableArray *_cellArray;
     
 }
-
+@property(nonatomic,strong)NSArray *modelArray;
 @end
 
 @implementation HomeViewController
@@ -32,29 +33,34 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-      self.tabBarItem.selectedImage = [[UIImage imageNamed:@"即时播报（颜色）"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
-      self.tabBarController.tabBar.tintColor = [UIColor colorWithRed:255/255.0 green:54/255.0 blue:0.0 alpha:1.0];
+    _modelArray = [self modelArray];
+    _cellArray = [NSMutableArray array];
+    for (int i = 0; i < [_modelArray count]; i++) {
+        HomeTableViewCell *cell = [[HomeTableViewCell alloc]init];
+        [_cellArray addObject:cell];
+    }
     
-    //    判断用户 登录状态
-    NSUserDefaults *state = [NSUserDefaults standardUserDefaults];
-    [state setValue:@"no" forKey:@"state"];
-    [state synchronize];
+   // _tableView.contentInset = UIEdgeInsetsMake(10, 0, 0, 0);
     
-    headerTitle = @[@"[热门] 找羊毛衫",@"[热门] 找横机",@"[热门] 找工作",@"[热门] 找羊毛衫",@"[热门] 找羊毛衫",@"[热门] 找羊毛衫",@"[热门] 找羊毛衫",@"[热门] 找羊毛衫",@"[热门] 找羊毛衫",@"[热门] 找羊毛衫"];
+    //设置搜索栏
+    _searchInformatiion.layer.cornerRadius = 15.0f;
+    _searchInformatiion.layer.masksToBounds = YES;
+    _searchInformatiion.layer.borderColor = [[UIColor colorWithWhite:0.7 alpha:1]CGColor];
+    _searchInformatiion.layer.borderWidth = 1.0f;
     
-    imageArray = @[@"00",@"01",@"02"];
+    NSUserDefaults *user = [NSUserDefaults standardUserDefaults];
+    [user setValue:@"no" forKey:@"state"];
+    [user synchronize];
+    
+    // headerTitle = @[@" 找羊毛衫",@"找横机",@" 找工作",@" 找羊毛衫",@"找羊毛衫",@" 找羊毛衫",@" 找羊毛衫",@" 找羊毛衫",@" 找羊毛衫",@" 找羊毛衫"];
+    
+    imageArray = @[@"轮播图1",@"广告页2",@"广告页3"];
     sortArray = @[@"找货",@"找加工",@"承接加工",@"招工",@"找工作",@"求租",@"出租",@"转让",@"其他需求"];
     
     
     _tableView.dataSource = self;
     _tableView.delegate = self;
     _tableView.tag = 0;
-    
-//    tableViewSort = [[UITableView alloc]initWithFrame:CGRectMake(20, 150, 335, 350) style:UITableViewStylePlain];
-    tableViewSort = [[UITableView alloc]init];
-    tableViewSort.delegate = self;
-    tableViewSort.dataSource = self;
-    tableViewSort.tag = 1;
     
     CGFloat imageW = _scrollerView.frame.size.width;
     CGFloat imageH = 150;
@@ -69,8 +75,9 @@
         
         _imageView.frame = CGRectMake(imageX, imageY, imageW, imageH);
         _imageView.image = [UIImage imageNamed:imageArray[i]];
-        _imageView.contentMode = UIViewContentModeScaleAspectFill;
+        
         _scrollerView.showsHorizontalScrollIndicator = NO;
+        
         [self.view addSubview:_scrollerView];
         [_scrollerView addSubview:_imageView];
     }
@@ -80,19 +87,18 @@
     _scrollerView.contentSize = CGSizeMake(contentW, 0);
     _scrollerView.delegate = self;
     _scrollerView.pagingEnabled = YES;
-  
+    
     
     //设置pageController
-    _pageController.currentPageIndicatorTintColor = [UIColor colorWithRed:0.301 green:0.766 blue:1.000 alpha:1.000];
+    _pageController.currentPageIndicatorTintColor = [UIColor colorWithRed:1.000 green:0.966 blue:0.325 alpha:1.000];
     
     _pageController.pageIndicatorTintColor = [UIColor grayColor];
     _pageController.numberOfPages = imageCount;
+    
     [self.view addSubview:_pageController];
     
     //图片自动轮播
-    [self startTimer];
-    
-}
+    [self startTimer];}
 
 //图片滚动时调用
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView
@@ -150,58 +156,80 @@
 
 
 
+- (NSArray *)modelArray{
+    
+    if (_modelArray ==nil) {
+        //  1.读取plsit文件
+        NSArray *dictArray = [NSArray arrayWithContentsOfFile:[[NSBundle mainBundle]pathForResource:@"images" ofType:@"plist" ]];
+        //  2.字典转模型
+        NSMutableArray *tempArray = [NSMutableArray array];
+        for (NSDictionary *dict in dictArray) {
+            Model *blogModel = [Model blogWithDict:dict];
+            [tempArray addObject:blogModel];
+        }
+        _modelArray = tempArray;
+      
+    }
+    return _modelArray;
+}
+
+
+
+
 #pragma mark  货物信息
 //返回多少行
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    for (int i = 0; i<headerTitle.count; i++) {
-        if (section == i && tableView.tag == 0) {
+    for (int i = 0; i<_modelArray.count; i++) {
+        if (section == i) {
             
-            return 1;
+            return _modelArray.count/10;
         }
     }
-    if (tableView.tag == 1) {
-        return  sortArray.count;
-    }
-    
     return 0;
+   
 }
 
 //返回多少组
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    if (tableView.tag == 0) {
-        return headerTitle.count;
-    }
-    return 1;
+    
+    return _modelArray.count;
+    
 }
 
 //返回头标题
 -(UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
-    if (tableView.tag == 0) {
-        
-        for (int i = 0; i<headerTitle.count; i++) {
-            if (section == i && tableView.tag == 0) {
-                UIView *view1 = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 375, 44)];
-                view1.backgroundColor = [UIColor colorWithWhite:0.903 alpha:1.000];
-                
-                UILabel *littleLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 8, 20, 30)];
-                littleLabel.backgroundColor = [UIColor whiteColor];
-                UILabel *headerLabel = [[UILabel alloc]initWithFrame:CGRectZero];
-                headerLabel.backgroundColor = [UIColor whiteColor];
-                headerLabel.opaque = NO;
-                headerLabel.textColor = [UIColor blackColor];
-                headerLabel.font = [UIFont systemFontOfSize:16];
-                headerLabel.frame = CGRectMake(20, 8, 375, 30) ;
-                headerLabel.text = headerTitle[i];
-                [view1 addSubview:littleLabel];
-                [view1 addSubview:headerLabel];
-                return view1;
-            }
+    
+    
+    for (int i = 0; i<_modelArray.count; i++) {
+        if (section == i && tableView.tag == 0) {
+            UIView *view1 = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 375, 40)];
+            view1.backgroundColor = [UIColor colorWithWhite:0.903 alpha:1.000];
             
+            UIImageView *imageView1 = [[UIImageView alloc]initWithFrame:CGRectMake(20, 15, 85, 18)];
+            imageView1.image = [UIImage imageNamed:@"播报焦点"];
+            
+            UIImageView *imageView2 = [[UIImageView alloc]initWithFrame:CGRectMake(135, 15, 20, 18)];
+            imageView2.image = [UIImage imageNamed:@"喇叭"];
+            
+            UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(165, 15, 200, 18)];
+            titleLabel.text = @"播报哥,谁用谁知道!";
+            titleLabel.font = [UIFont systemFontOfSize:13];
+            titleLabel.textColor = [UIColor colorWithWhite:0.3 alpha:1];
+            
+            UILabel *whiteLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 5, 375, 33)];
+            whiteLabel.backgroundColor = [UIColor whiteColor];
+            
+            [view1 addSubview:whiteLabel];
+            [view1 addSubview:imageView1];
+            [view1 addSubview:imageView2];
+            [view1 addSubview:titleLabel];
+            return view1;
         }
     }
+    
     return nil;
 }
 
@@ -209,146 +237,121 @@
 //设置头部高度
 -(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
-    if (tableView.tag == 0) {
-        return 44;
-    }
-    return 0;
+    
+    return 40;
+    
 }
 
 //单元格复用
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    
     _homeCell = [tableView dequeueReusableCellWithIdentifier:@"cell"];
+    
+    _homeCell.selectionStyle = UITableViewCellSelectionStyleNone;
+    
     if (_homeCell == nil) {
         _homeCell = [[HomeTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"cell"];
-        
     }
-    if (tableView.tag == 0) {
-        tableView.rowHeight = 300;
-         _homeCell.sortLabel.text = @"[找货]";
-        _homeCell.timeLabel.text = @"一天前";
-        _homeCell. addressLabel.text = @"[浙江省嘉兴市南湖区昌盛南路]";
-        _homeCell.descriptionLabel.text = @"转让一台吸风机,九成新,没怎么用";
-        _homeCell.scanLabel.text = @"50人浏览";
-        
-        //拨打电话按钮
-        [_homeCell.callButton setTitle:@"马上拨打" forState:UIControlStateNormal];
-        [_homeCell.callButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-        _homeCell.callButton.titleLabel.font = [UIFont systemFontOfSize:14];
-
-        [_homeCell.callButton setImage:[UIImage imageNamed:@"call"] forState:UIControlStateNormal];
-        [_homeCell.callButton addTarget:self action:@selector(call) forControlEvents:UIControlEventTouchUpInside];
-        _homeCell.picture.image = [UIImage imageNamed:@"00"];
-        
-        
-        //点赞按钮
-        [_homeCell.likeButton setTitle:@"  赞" forState:UIControlStateNormal];
-        [_homeCell.likeButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-        _homeCell.likeButton.titleLabel.font = [UIFont systemFontOfSize:13];
-        
-        [_homeCell.likeButton setImage:[UIImage imageNamed:@"like"] forState:UIControlStateNormal];
-        [_homeCell.likeButton addTarget:self action:@selector(call) forControlEvents:UIControlEventTouchUpInside];
-        
-        //分享按钮
-        [_homeCell.shareButton setTitle:@"  分享" forState:UIControlStateNormal];
-        [_homeCell.shareButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-        _homeCell.shareButton.titleLabel.font = [UIFont systemFontOfSize:13];
-        
-        [_homeCell.shareButton setImage:[UIImage imageNamed:@"share"] forState:UIControlStateNormal];
-        [_homeCell.shareButton addTarget:self action:@selector(call) forControlEvents:UIControlEventTouchUpInside];
-        
-        
-        //评论按钮
-        [_homeCell.commentButton setTitle:@"  评论" forState:UIControlStateNormal];
-        [_homeCell.commentButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-        _homeCell.commentButton.titleLabel.font = [UIFont systemFontOfSize:13];
-        
-        [_homeCell.commentButton setImage:[UIImage imageNamed:@"comment"] forState:UIControlStateNormal];
-        [_homeCell.commentButton addTarget:self action:@selector(call) forControlEvents:UIControlEventTouchUpInside];
-        
-         
+    
+    Model *imageModel = _modelArray[indexPath.section];
+    //    if ([imageModel.picture count] == 0) {
+    for (int i = 0; i < [_homeCell.imageArray count]; i++) {
+        [_homeCell.imageArray[i] removeFromSuperview];
     }
-    else if (tableView.tag == 1)
-    {
-        _homeCell.textLabel.text = sortArray[indexPath.row];
-        _homeCell.textLabel.textColor = [UIColor colorWithRed:0.206 green:0.704 blue:1.000 alpha:1.000];
-        tableViewSort.rowHeight = 40;
-        tableViewSort.scrollEnabled = NO;
-        _homeCell.selectionStyle = UITableViewCellSelectionStyleNone;
-    }
+    //    }
+    
+    [_homeCell setModel:imageModel :YES];
+    _homeCell.delegate = self;
     return _homeCell;
+    
+    
+    
 }
+
+#pragma mark 自定义cell的三个代理方法
+- (void)HomeTableViewCellCallPhoneClicked:(HomeTableViewCell *)cell
+{
+    //NSLog(@"%@", cell);
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"消息提醒" message:@"是否拨打电话?" preferredStyle:UIAlertControllerStyleAlert];
+    [alert addAction:[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:nil]];
+    [alert addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil]];
+    [self presentViewController:alert animated:YES completion:nil];
+    
+}
+-(void)HomeTableViewCellCommentClicked:(HomeTableViewCell *)cell
+{
+    _detailViewController = [[DetailViewController alloc]init];
+    [self presentViewController:_detailViewController animated:NO completion:nil];
+    
+}
+
+-(void)NotLoginClicked:(HomeTableViewCell *)cell
+{
+    UIStoryboard *storyBoard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
+    _loadViewController = [storyBoard instantiateViewControllerWithIdentifier:@"loadVC"];
+    [self presentViewController:_loadViewController animated:YES completion:nil];
+}
+
+
+//返回cell的高度
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    HomeTableViewCell *cell = _cellArray[indexPath.section];
+    Model *imageModel = _modelArray[indexPath.section];
+    [cell setModel:imageModel :NO];
+    //    NSLog(@"%f", cell.height);
+    
+    return cell.height;
+    
+}
+
 
 #pragma mark tableViewCell的点击事件
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+   // Model *model = [[Model alloc]init];
     
-    if (tableView.tag == 0) {
-        //取出当前点击的cell
-        _homeCell = [tableView cellForRowAtIndexPath:indexPath];
-        NSUserDefaults *userDefault = [NSUserDefaults standardUserDefaults];
-        
-        [userDefault setValue:_homeCell.sortLabel.text forKey:@"sort"];
-        [userDefault setValue:_homeCell.timeLabel.text forKey:@"time"];
-        [userDefault setValue:_homeCell.addressLabel.text forKey:@"address"];
-        [userDefault setValue:_homeCell.descriptionLabel.text forKey:@"description"];
-        
-        UIImage *image = [UIImage imageNamed:@"00"];
-        NSData *data = UIImagePNGRepresentation(image);
-        [userDefault setValue:data forKey:@"image"];
-        
-        _detailViewController = [[DetailViewController alloc]init];
-        [self presentViewController:_detailViewController animated:NO completion:nil];
-    }
-     if(tableView.tag == 1)
-    {
-        
-    }
+    _homeCell = [tableView cellForRowAtIndexPath:indexPath];
     
-   
+    NSUserDefaults *userDefault = [NSUserDefaults standardUserDefaults];
+    
+    [userDefault setValue:_homeCell.sortLabel.text forKey:@"sort"];
+    [userDefault setValue:_homeCell.timeLabel.text forKey:@"time"];
+    [userDefault setValue:_homeCell.addressLabel.text forKey:@"address"];
+    [userDefault setValue:_homeCell.descriptionLabel.text forKey:@"description"];
+    
+    //UIImage *image = [UIImage imageNamed:model.picture[indexPath.row]];
+    UIImage *image = [UIImage imageNamed:@"00"];
+    NSData *data = UIImagePNGRepresentation(image);
+    [userDefault setValue:data forKey:@"image"];
+    
+    _detailViewController = [[DetailViewController alloc]init];
+    [self presentViewController:_detailViewController animated:NO completion:nil];
+    
 }
 
--(void)call
+
+-(UIStatusBarStyle)preferredStatusBarStyle
 {
-    //拨打电话点击跳转登录注册界面
-    NSLog(@"跳转界面");
+    return UIStatusBarStyleLightContent;
 }
-
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
-/*
-#pragma mark - Navigation
+- (IBAction)addMessage:(id)sender {
+    
+    UIStoryboard *storyBoard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
+    _postViewController = [storyBoard instantiateViewControllerWithIdentifier:@"post"];
+    [self presentViewController:_postViewController animated:YES completion:nil];
 
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
-
-- (IBAction)search:(id)sender {
 }
 
 - (IBAction)sortSearch:(id)sender {
     
-    button = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
-    button.backgroundColor = [UIColor colorWithRed:0.5 green:0.5 blue:0.5 alpha:0.5];
-    [button addTarget:self action:@selector(cancle) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:button];
-    
-    
-    view = [[UIView alloc]initWithFrame:CGRectMake(20, 150, 335, 360)];
-    view.backgroundColor = [UIColor colorWithWhite:0.7 alpha:1];
-    
-    [button addSubview:view];
-    
-    if (tableViewSort.tag == 1) {
-        tableViewSort.frame = CGRectMake(0, 0, 335, 360);
-        [view addSubview:tableViewSort];
-    }
-  
+    _sortSearchViewController = [[SortSearchViewController alloc]init];
+    [self presentViewController:_sortSearchViewController animated:NO completion:nil];
 
     
 }
