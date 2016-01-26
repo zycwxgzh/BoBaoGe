@@ -7,7 +7,7 @@
 //
 
 #import "LoadNextViewController.h"
-
+#import "AFNetworking.h"
 @interface LoadNextViewController ()
 {
     int count;
@@ -67,6 +67,18 @@
 - (IBAction)load:(id)sender {
     NSLog(@"点击登录");
     //    点击登录后 先进行判断 判断账号密码正确后 方可跳转回主页面
+    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+    NSString *url = [Internet_URL stringByAppendingString:Login];
+    NSDictionary *par = @{@"account" : _loadNumber.text,
+                          @"password" : _loadPassword.text
+                          };
+    [manager GET:url parameters:par success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        NSLog(@"%@",responseObject);
+        NSLog(@"%@",errorCodeStr);
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        nil;
+    }];
+    
 }
 
 - (IBAction)back:(id)sender {

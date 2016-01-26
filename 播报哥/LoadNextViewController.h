@@ -11,5 +11,10 @@
 @interface LoadNextViewController : UIViewController
 @property (weak, nonatomic) IBOutlet UIButton *loadButton;
 @property (weak, nonatomic) IBOutlet UIButton *forgetButton;
+@property (weak, nonatomic) IBOutlet UITextField *loadNumber;
+@property (weak, nonatomic) IBOutlet UITextField *loadPassword;
+
+
+
 
 @end

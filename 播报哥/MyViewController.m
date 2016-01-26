@@ -50,7 +50,7 @@
     
     array = @[@"找货",@"找加工",@"承接加工",@"招工",@"找工作",@"求租",@"出租",@"转让",@"其他需求"];
     arrayMu = [NSMutableArray arrayWithArray:array];
-    if (stateStr == [NSString stringWithFormat:@"no"]) {
+    if (stateStr == [NSString stringWithFormat:@""]) {
         
         timer = [NSTimer scheduledTimerWithTimeInterval:0.01 target:self selector:@selector(run) userInfo:nil repeats:YES];
         
