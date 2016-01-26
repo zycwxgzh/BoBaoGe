@@ -1,0 +1,51 @@
+//
+//  PrefixHeader_Interface.pch
+//  网络数据文本
+//
+//  Created by Anyi on 16/1/20.
+//  Copyright © 2016年 Anyi. All rights reserved.
+//
+
+#ifndef PrefixHeader_Interface_pch
+#define PrefixHeader_Interface_pch
+
+// Include any system framework and library headers here that should be included in all compilation units.
+// You will also need to set the Prefix Header build setting of one or more of your targets to reference this file.
+//#define Internet_URL @"http://120.26.196.181/broadcast/?action="
+//#define Internet_URL @"http://122.225.55.70:4685/broadcast/?action="
+#define Internet_URL @"http://172.16.3.237/broadcast/?action="
+
+#define GetMessageList        @"message&func=getMessageList"
+#define IssueMessage          @"message&func=issueMessage"
+#define UploadImage           @"message&func=uploadImage"
+#define DeleteMessage         @"message&func=deleteMessage"
+#define Insertlaud            @"laud&func=insertlaud"
+#define GetLaudList           @"laud&func=getLaudList"
+#define InsertComment         @"comment&func=insertComment"
+#define GetCommentList        @"comment&func=getCommentList"
+#define GetTypeList           @"type&func=getTypeList"
+#define GetAdvList            @"adv&func=getAdvList"
+#define Login                 @"login&func=login"
+#define SendMessage           @"user&func=sendMessage"
+#define Registerd             @"login&func=register"
+#define UpdateUserAllMessage  @"user&func=updateUserAllMessage"
+#define UpdateModifyPassword  @"user&func=updateModifyPassword"
+#define GetTempList           @"temp&func=getTempList"
+#define ValidateMessage       @"user&func=validateMessage"
+#define UserFindPassword      @"login&func=userFindPassword"
+#define CancelLaud            @"laud&func=cancelLaud"
+
+
+
+
+
+
+
+
+
+#define errorCodeDic [NSDictionary dictionaryWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"errorCodeDic" ofType:@"plist"]]
+#define errorCodeStr [errorCodeDic valueForKey:[responseObject[@"code"] stringValue]]
+
+
+
+#endif /* PrefixHeader_Interface_pch */
