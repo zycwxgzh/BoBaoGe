@@ -64,7 +64,8 @@
 //                                redirectUri:@"http://www.sharesdk.cn"];
 //
 //
-   
+    NSUserDefaults *user = [NSUserDefaults standardUserDefaults];
+    [user setValue:@"0" forKey:@"array"];
     return YES;
 }
 

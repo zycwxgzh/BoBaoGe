@@ -14,6 +14,7 @@
 //cell代理
 @protocol HomeTableViewCellDelegate <NSObject>
 
+@optional
 - (void) HomeTableViewCellCallPhoneClicked : (HomeTableViewCell *)cell;
 -(void) HomeTableViewCellCommentClicked:(HomeTableViewCell *)cell;
 -(void) NotLoginClicked:(HomeTableViewCell *)cell;
@@ -38,8 +39,8 @@
 @property(nonatomic,strong) UIButton *shareButton;
 @property(nonatomic,strong) UIButton *commentButton;
 @property(nonatomic,strong) NSMutableArray *muArray;
-//@property(nonatomic,strong) UILabel *label;
-//@property(nonatomic,strong) UILabel *label1;
+@property(nonatomic,strong) UILabel *likeCountLabel;
+@property(nonatomic,strong) UILabel *likeLabel;
 @property(nonatomic,strong) Model *model;
 //高度约束
 @property(nonatomic,strong)NSLayoutConstraint *heightConstraint;

@@ -90,9 +90,9 @@
     
     
     //设置pageController
-    _pageController.currentPageIndicatorTintColor = [UIColor colorWithRed:1.000 green:0.966 blue:0.325 alpha:1.000];
+    _pageController.currentPageIndicatorTintColor = [UIColor colorWithRed:1.000 green:0.191 blue:0.058 alpha:1.000];
     
-    _pageController.pageIndicatorTintColor = [UIColor grayColor];
+    _pageController.pageIndicatorTintColor = [UIColor whiteColor];
     _pageController.numberOfPages = imageCount;
     
     [self.view addSubview:_pageController];
@@ -168,6 +168,9 @@
             [tempArray addObject:blogModel];
         }
         _modelArray = tempArray;
+      // NSLog(@"+++++++++++++++%@",_modelArray);
+       // Model *model = _modelArray[5];
+       //NSLog(@"----------%@",model.time);
       
     }
     return _modelArray;
@@ -245,12 +248,11 @@
 //单元格复用
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    
+    _homeCell.selectionStyle = UITableViewCellSelectionStyleNone;
+
     _homeCell = [tableView dequeueReusableCellWithIdentifier:@"cell"];
     
-    _homeCell.selectionStyle = UITableViewCellSelectionStyleNone;
-    
-    if (_homeCell == nil) {
+        if (_homeCell == nil) {
         _homeCell = [[HomeTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"cell"];
     }
     
@@ -310,7 +312,7 @@
 #pragma mark tableViewCell的点击事件
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-   // Model *model = [[Model alloc]init];
+    //Model *model = [[Model alloc]init];
     
     _homeCell = [tableView cellForRowAtIndexPath:indexPath];
     
@@ -321,10 +323,13 @@
     [userDefault setValue:_homeCell.addressLabel.text forKey:@"address"];
     [userDefault setValue:_homeCell.descriptionLabel.text forKey:@"description"];
     
-    //UIImage *image = [UIImage imageNamed:model.picture[indexPath.row]];
-    UIImage *image = [UIImage imageNamed:@"00"];
-    NSData *data = UIImagePNGRepresentation(image);
-    [userDefault setValue:data forKey:@"image"];
+   // Model *model = _modelArray[2];
+   // NSLog(@"_________%@",model.picture[0]);
+   //UIImage *image = [UIImage imageNamed:model.picture[0]];
+   // NSLog(@"----------%@",_modelArray[0][@"picture"][0]);
+    //UIImage *image = [UIImage imageNamed:@"00"];
+    //NSData *data = UIImagePNGRepresentation(image);
+    //[userDefault setValue:data forKey:@"image"];
     
     _detailViewController = [[DetailViewController alloc]init];
     [self presentViewController:_detailViewController animated:NO completion:nil];

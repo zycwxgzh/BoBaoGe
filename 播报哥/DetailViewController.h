@@ -10,7 +10,12 @@
 #import "View.h"
 #import "Model.h"
 #import "LoadViewController.h"
-@interface DetailViewController : UIViewController
+#import "ContentView.h"
+
+
+@interface DetailViewController : UIViewController<ContentViewDelegate>
+
+
 @property(nonatomic,strong) LoadViewController *loadViewController;
 
 @property(nonatomic,strong) UILabel *sortLabel;
@@ -23,5 +28,7 @@
 @property(nonatomic,strong) UIButton *shareButton;
 @property(nonatomic,strong) Model *model;
 
+@property(nonatomic,strong) ContentView *contentView;
+@property(nonatomic,strong) UIScrollView *scrollerView;
 
 @end

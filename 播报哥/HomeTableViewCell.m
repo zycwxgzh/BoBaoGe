@@ -34,13 +34,22 @@
     
     _timeLabel = [[UILabel alloc]init];
     _timeLabel.font = [UIFont systemFontOfSize:12];
+    _timeLabel.textColor = [UIColor colorWithWhite:0.4 alpha:1];
     
     _addressLabel = [[UILabel alloc]init];
     _addressLabel.font = [UIFont systemFontOfSize:12];
+    _addressLabel.textColor = [UIColor colorWithWhite:0.4 alpha:1];
     
     _descriptionLabel = [[UILabel alloc]init];
     _descriptionLabel.font = [UIFont systemFontOfSize:16];
+    _descriptionLabel.textColor = [UIColor colorWithWhite:0.4 alpha:1];
     
+    _likeCountLabel = [[UILabel alloc]init];
+    _likeCountLabel.font = [UIFont systemFontOfSize:14];
+    
+    _likeLabel = [[UILabel alloc]init];
+    _likeLabel.text = @"赞";
+    _likeLabel.font = [UIFont systemFontOfSize:15];
     
     
     _scanLabel = [[UILabel alloc]init];
@@ -55,14 +64,14 @@
     _callButton = [[UIButton alloc]init];
     [_callButton setTitle:@"  马上拨打" forState:UIControlStateNormal];
     [_callButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-    _callButton.titleLabel.font = [UIFont systemFontOfSize:14];
+    _callButton.titleLabel.font = [UIFont systemFontOfSize:16];
     _callButton.tag = 0;
     [_callButton setImage:[UIImage imageNamed:@"马上拨打"] forState:UIControlStateNormal];
     [_callButton addTarget:self action:@selector(click:) forControlEvents:UIControlEventTouchUpInside];
     
     //点赞按钮
     _likeButton = [[UIButton alloc]init];
-    [_likeButton setTitle:@"  赞" forState:UIControlStateNormal];
+    //[_likeButton setTitle:@"  赞" forState:UIControlStateNormal];
     [_likeButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     _likeButton.titleLabel.font = [UIFont systemFontOfSize:13];
     _likeButton.tag = 1;
@@ -99,6 +108,8 @@
     [self addSubview:_shareButton];
     [self addSubview:_commentButton];
     [self addSubview:_lineLabel];
+    [self addSubview:_likeCountLabel];
+    [self addSubview:_likeLabel];
 }
 -(void)setModel:(Model *)model : (BOOL)draw
 {
@@ -106,17 +117,17 @@
     //1.分类标签
     CGSize sizeOfSort = [model.sort boundingRectWithSize:CGSizeMake(335, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:16]} context:nil].size;
     
-    _sortLabel.frame = CGRectMake(20 , 10, sizeOfSort.width, sizeOfSort.height);
+    _sortLabel.frame = CGRectMake(10 , 10, sizeOfSort.width, sizeOfSort.height);
     
     //2.时间标签
     CGSize sizeOfTime = [model.time boundingRectWithSize:CGSizeMake(335, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:12]} context:nil].size;
     
-    _timeLabel.frame = CGRectMake(_sortLabel.frame.origin.x + _sortLabel.frame.size.width + 5, 12, sizeOfTime.width, sizeOfTime.height);
+    _timeLabel.frame = CGRectMake(_sortLabel.frame.origin.x + _sortLabel.frame.size.width , 12, sizeOfTime.width, sizeOfTime.height);
     
     //3.地址标签
     CGSize sizeOfAddress= [model.address boundingRectWithSize:CGSizeMake(335, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:12]} context:nil].size;
     
-    _addressLabel.frame = CGRectMake(20, _sortLabel.frame.origin.y + _sortLabel.frame.size.height + 10, sizeOfAddress.width, sizeOfAddress.height);
+    _addressLabel.frame = CGRectMake(20, _sortLabel.frame.origin.y + _sortLabel.frame.size.height , sizeOfAddress.width, sizeOfAddress.height);
     
     //4.信息描述标签
     CGSize sizeOfDescription= [model.description1 boundingRectWithSize:CGSizeMake(355, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:16]} context:nil].size;
@@ -195,13 +206,19 @@
     
     
     //6.拨打电话按钮
-    _callButton.frame = CGRectMake(250, 3, 100,30);
+    _callButton.frame = CGRectMake(250, 3, 100,50);
     
     //7.点赞按钮
-    _likeButton.frame = CGRectMake(0, _scanLabel.frame.origin.y + _scanLabel.frame.size.height + 10, 115, 30);
+    _likeButton.frame = CGRectMake(0, _scanLabel.frame.origin.y + _scanLabel.frame.size.height + 10, 50, 30);
+    
+    //点赞数
+    _likeCountLabel.frame = CGRectMake(_likeButton.frame.origin.x + _likeButton.frame.size.width, _scanLabel.frame.origin.y + _scanLabel.frame.size.height + 12, 30, 30);
+    
+    //
+    _likeLabel.frame = CGRectMake(_likeCountLabel.frame.origin.x + _likeCountLabel.frame.size.width-10, _scanLabel.frame.origin.y + _scanLabel.frame.size.height + 12, 30, 30);
     
     //8.分享按钮
-    _shareButton.frame = CGRectMake(_likeButton.frame.origin.x + _likeButton.frame.size.width, _scanLabel.frame.origin.y + _scanLabel.frame.size.height + 10, 115, 30);
+    _shareButton.frame = CGRectMake(_likeLabel.frame.origin.x + _likeLabel.frame.size.width + 10, _scanLabel.frame.origin.y + _scanLabel.frame.size.height + 10, 115, 30);
     
     //9.评论按钮
     _commentButton.frame = CGRectMake(_shareButton.frame.origin.x + _shareButton.frame.size.width, _scanLabel.frame.origin.y + _scanLabel.frame.size.height + 10, 115, 30);
@@ -212,6 +229,8 @@
     _timeLabel.text = model.time;
     _addressLabel.text = model.address;
     _descriptionLabel.text = model.description1;
+    //点赞数
+    _likeCountLabel.text = @"0";
     
        _height = _likeButton.frame.origin.y + _likeButton.frame.size.height + 10;
     

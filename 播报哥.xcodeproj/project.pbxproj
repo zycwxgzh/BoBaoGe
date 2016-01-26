@@ -72,6 +72,8 @@
 		ABF8F9411C55F55A0027B1B3 /* libicucore.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = ABF8F9401C55F55A0027B1B3 /* libicucore.tbd */; };
 		ABF8F9451C5613EF0027B1B3 /* ContentView.m in Sources */ = {isa = PBXBuildFile; fileRef = ABF8F9441C5613EF0027B1B3 /* ContentView.m */; };
 		ABF9C0201C4CDE06008B8257 /* HomeTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = ABF9C01F1C4CDE06008B8257 /* HomeTableViewCell.m */; };
+		ABFD1DCC1C576B2600A8D70F /* AlbumViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ABFD1DCB1C576B2600A8D70F /* AlbumViewController.m */; };
+		ABFD1DCF1C576C0100A8D70F /* InputViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ABFD1DCE1C576C0100A8D70F /* InputViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -198,6 +200,10 @@
 		ABF8F9441C5613EF0027B1B3 /* ContentView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContentView.m; sourceTree = "<group>"; };
 		ABF9C01E1C4CDE06008B8257 /* HomeTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HomeTableViewCell.h; sourceTree = "<group>"; };
 		ABF9C01F1C4CDE06008B8257 /* HomeTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HomeTableViewCell.m; sourceTree = "<group>"; };
+		ABFD1DCA1C576B2600A8D70F /* AlbumViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlbumViewController.h; sourceTree = "<group>"; };
+		ABFD1DCB1C576B2600A8D70F /* AlbumViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlbumViewController.m; sourceTree = "<group>"; };
+		ABFD1DCD1C576C0100A8D70F /* InputViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InputViewController.h; sourceTree = "<group>"; };
+		ABFD1DCE1C576C0100A8D70F /* InputViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InputViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -341,6 +347,10 @@
 				67507F031C4CCBF800BF0A37 /* CommodityViewController.m */,
 				67507F041C4CCBF800BF0A37 /* PostViewController.h */,
 				67507F051C4CCBF800BF0A37 /* PostViewController.m */,
+				ABFD1DCA1C576B2600A8D70F /* AlbumViewController.h */,
+				ABFD1DCB1C576B2600A8D70F /* AlbumViewController.m */,
+				ABFD1DCD1C576C0100A8D70F /* InputViewController.h */,
+				ABFD1DCE1C576C0100A8D70F /* InputViewController.m */,
 				67507F061C4CCBF800BF0A37 /* MyViewController.h */,
 				67507F071C4CCBF800BF0A37 /* MyViewController.m */,
 				07FB2D021C4DDDE90010BFAE /* LoadViewController.h */,
@@ -646,6 +656,7 @@
 				ABF9C0201C4CDE06008B8257 /* HomeTableViewCell.m in Sources */,
 				67507F0A1C4CCBF800BF0A37 /* PostViewController.m in Sources */,
 				071BB97C1C4CBE71006E844C /* AppDelegate.m in Sources */,
+				ABFD1DCF1C576C0100A8D70F /* InputViewController.m in Sources */,
 				07F65EE21C5086B7007CACE5 /* ForgetPasswordViewController.m in Sources */,
 				07FB2D551C4E08160010BFAE /* RegisterViewController.m in Sources */,
 				071BB9791C4CBE71006E844C /* main.m in Sources */,
@@ -658,6 +669,7 @@
 				07EC7C1B1C5202270038CCF1 /* PasswordNextViewController.m in Sources */,
 				07FB2D041C4DDDE90010BFAE /* LoadViewController.m in Sources */,
 				67507F0B1C4CCBF800BF0A37 /* MyViewController.m in Sources */,
+				ABFD1DCC1C576B2600A8D70F /* AlbumViewController.m in Sources */,
 				07F4007B1C4F7000008491A9 /* PasswordViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
