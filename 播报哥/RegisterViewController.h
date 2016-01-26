@@ -17,4 +17,17 @@
 - (IBAction)save:(id)sender;
 - (IBAction)back:(id)sender;
 @property (weak, nonatomic) IBOutlet UIButton *sendButton;
+@property (weak, nonatomic) IBOutlet UITextField *phoneNumber;
+@property (weak, nonatomic) IBOutlet UITextField *checkNumber;
+@property (weak, nonatomic) IBOutlet UITextField *firstPassword;
+@property (weak, nonatomic) IBOutlet UITextField *againPassword;
+@property (weak, nonatomic) IBOutlet UITextField *wechatNumber;
+@property (weak, nonatomic) IBOutlet UITextField *qqNumber;
+
+
+
+
+
+
+
 @end

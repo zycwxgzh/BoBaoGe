@@ -1,2 +1,2 @@
-pod 'AFNetworking', '~> 3.0'
+pod 'AFNetworking', '~> 2.6.3'
 pod 'MBProgressHUD', '~> 0.9.2'
