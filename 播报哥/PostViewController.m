@@ -171,7 +171,7 @@
     if (![str isEqualToString:@"0"]) {
         _contentView.text = string;
         
-        if (!(textNum)) {
+        if (!(textNum)&&![str isEqualToString:@""]) {
             _textLable.attributedText = nil;
             textNum =YES;
         }
